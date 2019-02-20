@@ -2,7 +2,24 @@
 
 import praw, datetime, time, random, string, obot
 
-#today = str(datetime.datetime.now().day) + "-" + str(datetime.datetime.now().month) + "-" + str(datetime.datetime.now().year)
+#  --------
+#  Settings
+#  --------
+
+subreddit = "XXXXX" # Subreddit to add users to
+botUsername = "XXXXX" # Username of the bot
+immunity = [] # Members we don't want to kick
+memberCap = 95 # How many members we want in the subreddit
+bannedSubs = [] # Subreddits we don't want users from
+bannedUsers = [] # Users we don't want in the sub
+karmaDownLimit = 100  # Minimum comment karma
+karmaUpLimit = 100000000  # Maximum comment karma
+accountAgeLimit = 30 # Minimum account age in days
+wordsLimit = []  # Words we don't want in a username
+
+# --------
+
+today = str(datetime.datetime.now().day) + "-" + str(datetime.datetime.now().month) + "-" + str(datetime.datetime.now().year)
 now = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=-7), 'Mountain Standard Time'))
 today = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
 
@@ -15,26 +32,17 @@ def log(m, show=True):
 
     #logs.close()
 
-# Setting up initial parameters
-immunity = ["inclinedtothelie"]
-memberCap = 95
-bannedSubs = [" "]
-bannedUsers = ["PlaylisterBot", "AutoModerator", "PornOverlord", "Kebble", "Andrew-Mccutchen", "Threven"]
-karmaDownLimit = 100  #minimum comment karma
-karmaUpLimit = 100000000  #maximum comment karma
-accountAgeLimit = 30 #minimum account age in days
-wordsLimit = [" "]  #words we don't want in a username
 recap = ""
 from messages import *
 
-log("Signing in as TretkiBot...")
+log("Signing in as /u/" + botUsername + "...")
 
 try:
     r = obot.login()
 except:
     print("Wrong username/password combination")
 else:
-    s = r.subreddit("tretki")
+    s = r.subreddit(subreddit)
     log("Done")
 
 # functions
@@ -49,9 +57,9 @@ def add(user):
 
 def getUserList():
     userList = []
-    for contributor in r.subreddit('tretki').contributor():
+    for contributor in r.subreddit(subreddit).contributor():
         username = str(contributor)
-        if username != "TretkiBot":
+        if username != botUsername:
             userList.append(username)
     userList.reverse()
     return userList
@@ -63,7 +71,7 @@ def flair(user,flair,css):
 def postRecap(m):
     log("Posting the recap...")
     postTitle = str(today) +' - Bot Recap'
-    r.subreddit("tretki").submit(postTitle, m)
+    r.subreddit(subreddit).submit(postTitle, m)
     log("Done")
 
 
@@ -93,7 +101,7 @@ for member in memberList:
                 postedSub = post.subreddit.display_name
                 hoursAgo = (time.time()-post.created_utc)/3600.0
 
-                if postedSub == "tretki":
+                if postedSub == subreddit:
                         if hoursAgo < latestPost:
                                 latestPost = hoursAgo
 
@@ -103,7 +111,7 @@ for member in memberList:
         if latestPost <= hoursLimit:
                 log("[OK] Latest post was " + str(latestPost) + " hours ago.")
         else:
-                log("[NOT OK] No post in /r/tretki in the last 7 days.")
+                log("[NOT OK] No post in /r/" + subreddit + " in the last 7 days.")
                 recap += r"\#" + str(i) + " - /u/" + member + "\n\n"
                 n+=1
                 kick(member)
