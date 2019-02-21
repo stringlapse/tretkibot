@@ -1,6 +1,7 @@
 #!/usr/local/lib/ python
 
 import praw, datetime, time, random, string, obot
+from messages import *
 
 #  --------
 #  Settings
@@ -8,6 +9,8 @@ import praw, datetime, time, random, string, obot
 
 subreddit = "XXXXX" # Subreddit to add users to
 botUsername = "XXXXX" # Username of the bot
+writeLogs = True # Wether or not to write logs to a file
+logFile = "XXXXX" # Path to write logs to if writeLogs == True
 immunity = [] # Members we don't want to kick
 memberCap = 95 # How many members we want in the subreddit
 bannedSubs = [] # Subreddits we don't want users from
@@ -23,20 +26,17 @@ today = str(datetime.datetime.now().day) + "-" + str(datetime.datetime.now().mon
 now = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=-7), 'Mountain Standard Time'))
 today = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
 
-def log(m, show=True):
-    #logs = open("C:\Users\Alex\Documents\TretkiBot\TretkiBot\Tretki\logs\logs"+ today +".txt", "a")
-    #logs.write(m + "\n")
-
-    if show==True:
-        print(m)
-
-    #logs.close()
+def log(m):
+    print(m)
+    if writeLogs:
+        logs = open(logFile + today + ".txt", "a")
+        logs.write(m + "\n")
+        logs.close()
 
 recap = ""
-from messages import *
 
+# Sign in as bot user
 log("Signing in as /u/" + botUsername + "...")
-
 try:
     r = obot.login()
 except:
@@ -45,7 +45,7 @@ else:
     s = r.subreddit(subreddit)
     log("Done")
 
-# functions
+# Set up functions
 def kick(user):
     s.contributor.remove(user)
     flair(user,"[Kicked]",'kicked')
@@ -75,7 +75,7 @@ def postRecap(m):
     log("Done")
 
 
-#Kicking...
+# Kick inactive users
 memberList = getUserList()
 recap += "Kicked users: \n\n"
 
@@ -116,8 +116,7 @@ for member in memberList:
                 n+=1
                 kick(member)
 
-#Adding...
-
+# Add new members
 nbAdded = memberCap-len(memberList)+n
 newUser = ""
 log("Adding " + str(nbAdded) + " users...")
@@ -179,7 +178,7 @@ while nbAdded>0:
                 if nbAdded==0:
                         break
 
-#Change flairs...
+# Update member flairs and add new members to recap
 new=""
 i=0
 newUsers = []
@@ -200,32 +199,12 @@ for user in getUserList():
                                 break
                 recap += r"\#" + str(i) + " - /u/" + user + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
 
+# Add welcome message to recap
 if random.randint(0,1) == 1:
         recap += '-----\n\n' + welcomeMessages[random.randint(0,len(welcomeMessages)-1)]
 else:
         pickedUser = newUsers[random.randint(0,len(newUsers)-1)]
         recap += '-----\n\n' + userWelcomeMessages[random.randint(0,len(userWelcomeMessages)-1)].format(pickedUser)
 
-#Posting the recap...
+# Post recap
 postRecap(recap)
-## lastRecap = r.get_redditor("TretkiBot").get_submitted(limit=None)
-
-## for recap in lastRecap:
-##    recapLink = "["+today+"](" + recap.permalink + ")"
-##   break
-
-## fContent = ""
-## f = open("/usr/bin/tretki/tretki/Bots/RecapLinks.txt", "r")
-## content = f.read()
-## f.close()
-
-## f = open("/usr/bin/tretki/tretki/Bots/RecapLinks.txt", "w")
-## f.write(recapLink + '\n\n' + content)
-## f.close()
-
-## f = open("/usr/bin/tretki/tretki/Bots/RecapLinks.txt", "r")
-## fContent = f.read()
-## f.close()
-
-## wiki = r.get_wiki_page("tretki","botrecaps")
-## editPage = r.edit_wiki_page("tretki", "botrecaps","#Bot Recap log\n\nThis page includes all of /u/TretkiBot's recaps of kicked and added users. It does not include /u/Vatvay's recaps at the time being.\n\n" + fContent, reason=u'')
