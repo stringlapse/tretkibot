@@ -11,6 +11,7 @@ subreddit = "XXXXX" # Subreddit to add users to
 botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
 logFile = "XXXXX" # Path to write logs to if writeLogs == True
+randomFlairs = False # Wether or not to randomize member flairs on each run
 immunity = [] # Members we don't want to kick
 memberCap = 95 # How many members we want in the subreddit
 bannedSubs = [] # Subreddits we don't want users from
@@ -178,16 +179,12 @@ while nbAdded>0:
                 if nbAdded==0:
                         break
 
-# Update member flairs and add new members to recap
+# Add new members to recap
 new=""
 i=0
 newUsers = []
 for user in getUserList():
         i+=1
-        if user==newUser:
-                new="new"
-
-        flair(user,'#'+str(i),'number'+new)
 
         if new=="new":
                 newUsers.append(user)
@@ -198,6 +195,25 @@ for user in getUserList():
                                 sourceSubreddit_ = x['sourceSubreddit']
                                 break
                 recap += r"\#" + str(i) + " - /u/" + user + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
+
+#Update member flairs
+if not randomFlairs:
+    i=0
+    for user in getUserList():
+        i+=1
+        flair(user,'#'+str(i),'number')
+
+if randomFlairs:
+    userList = getUserList()
+    numbers = []
+    for i in range(1,len(userList)+1):
+        numbers.append(i)
+    for i in range(0,len(userList)):
+        user = userList[random.randint(0,len(userList)-1)]
+        number = numbers[random.randint(0,len(numbers)-1)]
+        flair(user,'#'+str(number),'number')
+        userList.remove(user)
+        numbers.remove(number)
 
 # Add welcome message to recap
 if random.randint(0,1) == 1:
