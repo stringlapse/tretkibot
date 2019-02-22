@@ -1,4 +1,4 @@
-#!/usr/local/lib/ python
+#!/usr/bin/python3
 
 import praw, datetime, time, random, string, obot
 from messages import *
