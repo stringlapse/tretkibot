@@ -12,7 +12,7 @@ botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
 logFile = "XXXXX" # Path to write logs to if writeLogs == True
 randomFlairs = False # Wether or not to randomize member flairs on each run
-immunity = [] # Members we don't want to kick
+immunity = [] # Members we don't want to kick without confirmation
 memberCap = 95 # How many members we want in the subreddit
 bannedSubs = [] # Subreddits we don't want users from
 bannedUsers = [] # Users we don't want in the sub
@@ -75,6 +75,15 @@ def postRecap(m):
     r.subreddit(subreddit).submit(postTitle, m)
     log("Done")
 
+def confirmAction():
+    m = input()
+    if m == "y" or m == "Y":
+        return True
+    elif m == "n" or m == "N":
+        return False
+    else:
+        print("Unrecognized input, assuming N")
+        return False
 
 # Kick inactive users
 memberList = getUserList()
@@ -88,10 +97,6 @@ n = 0
 for member in memberList:
         i+=1
         log("#" + str(i) + " /u/" + member)
-
-        if member in immunity:
-                log("/u/" + member + " is in immunity list.")
-                continue
 
         overview = r.redditor(member).new(limit=None)
 
@@ -113,6 +118,13 @@ for member in memberList:
                 log("[OK] Latest post was " + str(latestPost) + " hours ago.")
         else:
                 log("[NOT OK] No post in /r/" + subreddit + " in the last 7 days.")
+                if member in immunity:
+                    log("/u/" + member + " is in immunity list. Kick anyway? [Y/N]")
+                    if confirmAction() == False:
+                        log("/u/" + member + " will not be kicked")
+                        continue
+                    else:
+                        log("/u/" + member + " has been kicked")
                 recap += r"\#" + str(i) + " - /u/" + member + "\n\n"
                 n+=1
                 kick(member)
