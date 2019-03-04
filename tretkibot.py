@@ -76,10 +76,10 @@ def postRecap(m):
     log("Done")
 
 def confirmAction():
-    m = input()
-    if m == "y" or m == "Y":
+    m = input().lower()
+    if m == "y":
         return True
-    elif m == "n" or m == "N":
+    elif m == "n":
         return False
     else:
         print("Unrecognized input, assuming N")
