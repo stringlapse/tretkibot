@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import praw, datetime, time, random, string, obot
+import praw, datetime, time, pytz, random, string, obot
 from messages import *
 
 #  --------
@@ -23,8 +23,9 @@ wordsLimit = []  # Words we don't want in a username
 
 # --------
 
-today = str(datetime.datetime.now().day) + "-" + str(datetime.datetime.now().month) + "-" + str(datetime.datetime.now().year)
-now = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=-7), 'Mountain Standard Time'))
+#today = str(datetime.datetime.now().day) + "-" + str(datetime.datetime.now().month) + "-" + str(datetime.datetime.now().year)
+#now = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=-7), 'Mountain Standard Time'))
+now = datetime.datetime.now(pytz.timezone('US/Mountain'))
 today = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
 
 def log(m):
