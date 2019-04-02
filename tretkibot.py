@@ -199,6 +199,9 @@ newUsers = []
 for user in getUserList():
         i+=1
 
+        if user == newUser:
+                new = 'new'
+
         if new=="new":
                 newUsers.append(user)
                 for x in sourceList:
