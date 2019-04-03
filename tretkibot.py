@@ -132,7 +132,6 @@ for member in memberList:
 
 # Add new members
 nbAdded = memberCap-len(memberList)+n
-newUser = ""
 log("Adding " + str(nbAdded) + " users...")
 newUser = ""
 recap += "\nAdded users:  \n\n"
