@@ -7,6 +7,9 @@ from messages import *
 #  Settings
 #  --------
 
+recapTitle = "Bot Recap" # Text following the current date in the bot post title
+kickedUsersHeading = "Kicked users:" # Text preceding the list of kicked users
+addedUsersHeading = "" # Text preceding the list of added users
 subreddit = "XXXXX" # Subreddit to add users to
 botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
@@ -72,7 +75,7 @@ def flair(user,flair,css):
 
 def postRecap(m):
     log("Posting the recap...")
-    postTitle = str(today) +' - Bot Recap'
+    postTitle = str(today) +' - '+ recapTitle
     r.subreddit(subreddit).submit(postTitle, m)
     log("Done")
 
@@ -88,7 +91,7 @@ def confirmAction():
 
 # Kick inactive users
 memberList = getUserList()
-recap += "Kicked users: \n\n"
+recap += kickedUsersHeading + "\n\n"
 
 log("Starting to kick inactive members...")
 
@@ -134,7 +137,7 @@ for member in memberList:
 nbAdded = memberCap-len(memberList)+n
 log("Adding " + str(nbAdded) + " users...")
 newUser = ""
-recap += "\nAdded users:  \n\n"
+recap += "\n"+addedUsersHeading+"\n\n"
 sourceList = []
 
 if nbAdded<0:
