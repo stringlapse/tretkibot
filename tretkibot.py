@@ -209,7 +209,11 @@ for user in getUserList():
                                 sourceComment_ = x['sourceComment']
                                 sourceSubreddit_ = x['sourceSubreddit']
                                 break
-                recap += r"\#" + str(i) + " - /u/" + user + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
+                if randomFlairs:
+                        number = '??'
+                else:
+                        number = str(i)
+                recap += r"\#" + number + " - /u/" + user + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
 
 #Update member flairs
 if not randomFlairs:
