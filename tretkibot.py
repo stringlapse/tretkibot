@@ -221,13 +221,11 @@ if not randomFlairs:
 if randomFlairs:
     userList = getUserList()
     numbers = []
-    for i in range(1,len(userList)+1):
+    for i in range(1, len(userList)+1):
         numbers.append(i)
-    for i in range(0,len(userList)):
-        user = userList[random.randint(0,len(userList)-1)]
+    for user in userList:
         number = numbers[random.randint(0,len(numbers)-1)]
         flair(user,'#'+str(number),'number'+new)
-        userList.remove(user)
         numbers.remove(number)
 
 # Add welcome message to recap
