@@ -9,11 +9,11 @@ from messages import *
 
 recapTitle = "Bot Recap" # Text following the current date in the bot post title
 kickedUsersHeading = "Kicked users:" # Text preceding the list of kicked users
-addedUsersHeading = "" # Text preceding the list of added users
+addedUsersHeading = "Added users:" # Text preceding the list of added users
 subreddit = "XXXXX" # Subreddit to add users to
 botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
-logFile = "XXXXX" # Path to write logs to if writeLogs == True
+logFilePath = "/path/to/put/logs/at" # Path to write logs to if writeLogs == True
 randomFlairs = False # Wether or not to randomize member flairs on each run
 randomRandomFlairs = False # If enabled, there's a 50/50 chance randomFlairs will be enabled. Overrides randomFlairs setting.
 immunity = [] # Members we don't want to kick without confirmation
@@ -35,7 +35,7 @@ today = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
 def log(m):
     print(m)
     if writeLogs:
-        logs = open(logFile + today + ".txt", "a")
+        logs = open(logFilePath + "/"+ today + ".txt", "a")
         logs.write(m + "\n")
         logs.close()Added users:  
 
