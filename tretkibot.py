@@ -126,7 +126,7 @@ for member in memberList:
                         continue
                     else:
                         log("/u/" + member + " has been kicked")
-                recap += r"\#" + str(i) + " - /u/" + member + "\n\n"
+                recap += r"\#" + str(i) + " - /u/" + member.replace("_", r"\_") + "\n\n"
                 n+=1
                 kick(member)
 
@@ -209,7 +209,7 @@ for user in getUserList():
                                 sourceComment_ = x['sourceComment']
                                 sourceSubreddit_ = x['sourceSubreddit']
                                 break
-                recap += r"\#" + str(i) + " - /u/" + user + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
+                recap += r"\#" + str(i) + " - /u/" + user.replace("_", r"\_") + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
 
 #Update member flairs
 if not randomFlairs:
