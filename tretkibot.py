@@ -37,7 +37,7 @@ def log(m):
     if writeLogs:
         logs = open(logFilePath + "/"+ today + ".txt", "a")
         logs.write(m + "\n")
-        logs.close()Added users:  
+        logs.close()
 
 if randomRandomFlairs:
         randomFlairs = bool(random.randint(0,1))
