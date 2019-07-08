@@ -7,11 +7,15 @@ from messages import *
 #  Settings
 #  --------
 
+recapTitle = "Bot Recap" # Text following the current date in the bot post title
+kickedUsersHeading = "Kicked users:" # Text preceding the list of kicked users
+addedUsersHeading = "Added users:" # Text preceding the list of added users
 subreddit = "XXXXX" # Subreddit to add users to
 botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
-logFile = "XXXXX" # Path to write logs to if writeLogs == True
+logFilePath = "/path/to/put/logs/at" # Path to write logs to if writeLogs == True
 randomFlairs = False # Wether or not to randomize member flairs on each run
+randomRandomFlairs = False # If enabled, there's a 50/50 chance randomFlairs will be enabled. Overrides randomFlairs setting.
 immunity = [] # Members we don't want to kick without confirmation
 memberCap = 95 # How many members we want in the subreddit
 bannedSubs = [] # Subreddits we don't want users from
@@ -31,9 +35,12 @@ today = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
 def log(m):
     print(m)
     if writeLogs:
-        logs = open(logFile + today + ".txt", "a")
+        logs = open(logFilePath + "/"+ today + ".txt", "a")
         logs.write(m + "\n")
-        logs.close()
+        logs.close()Added users:  
+
+if randomRandomFlairs:
+        randomFlairs = bool(random.randint(0,1))
 
 recap = ""
 
@@ -72,7 +79,7 @@ def flair(user,flair,css):
 
 def postRecap(m):
     log("Posting the recap...")
-    postTitle = str(today) +' - Bot Recap'
+    postTitle = str(today) +' - '+ recapTitle
     r.subreddit(subreddit).submit(postTitle, m)
     log("Done")
 
@@ -88,7 +95,7 @@ def confirmAction():
 
 # Kick inactive users
 memberList = getUserList()
-recap += "Kicked users: \n\n"
+recap += kickedUsersHeading + "\n\n"
 
 log("Starting to kick inactive members...")
 
@@ -134,7 +141,7 @@ for member in memberList:
 nbAdded = memberCap-len(memberList)+n
 log("Adding " + str(nbAdded) + " users...")
 newUser = ""
-recap += "\nAdded users:  \n\n"
+recap += "\n"+addedUsersHeading+"\n\n"
 sourceList = []
 
 if nbAdded<0:
@@ -209,7 +216,11 @@ for user in getUserList():
                                 sourceComment_ = x['sourceComment']
                                 sourceSubreddit_ = x['sourceSubreddit']
                                 break
-                recap += r"\#" + str(i) + " - /u/" + user.replace("_", r"\_") + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
+                if randomFlairs:
+                        number = '??'
+                else:
+                        number = str(i)
+                recap += r"\#" + number + " - /u/" + user.replace("_", r"\_") + ' from [this comment](https://reddit.com/comments/' + sourcePost_ + '/comment/' + sourceComment_ + '?context=10000) in [r/' + sourceSubreddit_ + '](https://reddit.com/r/' + sourceSubreddit_ + ')\n\n'
 
 #Update member flairs
 if not randomFlairs:
@@ -221,13 +232,11 @@ if not randomFlairs:
 if randomFlairs:
     userList = getUserList()
     numbers = []
-    for i in range(1,len(userList)+1):
+    for i in range(1, len(userList)+1):
         numbers.append(i)
-    for i in range(0,len(userList)):
-        user = userList[random.randint(0,len(userList)-1)]
+    for user in userList:
         number = numbers[random.randint(0,len(numbers)-1)]
         flair(user,'#'+str(number),'number'+new)
-        userList.remove(user)
         numbers.remove(number)
 
 # Add welcome message to recap
