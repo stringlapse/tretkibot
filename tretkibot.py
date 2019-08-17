@@ -42,7 +42,7 @@ def log(m):
 
 if randomRandomFlairs:
     willItBeRandom = random.uniform(0,1)
-    if (willItBeRandom <= randomRandomFlairsChance):
+    if (willItBeRandom >= randomRandomFlairsChance):
         randomFlairs = False
     else:
         randomFlairs = True
