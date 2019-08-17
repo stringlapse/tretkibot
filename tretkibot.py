@@ -15,7 +15,8 @@ botUsername = "XXXXX" # Username of the bot
 writeLogs = True # Wether or not to write logs to a file
 logFilePath = "/path/to/put/logs/at" # Path to write logs to if writeLogs == True
 randomFlairs = False # Wether or not to randomize member flairs on each run
-randomRandomFlairs = False # If enabled, there's a 50/50 chance randomFlairs will be enabled. Overrides randomFlairs setting.
+randomRandomFlairs = False # If enabled, there's a chance (set by randomRandomFlairsChance) randomFlairs will be enabled. Overrides randomFlairs setting.
+randomRandomFlairsChance = 0.5 # Chance that randomRandomFlairs will enable randomFlairs
 immunity = [] # Members we don't want to kick without confirmation
 memberCap = 95 # How many members we want in the subreddit
 bannedSubs = [] # Subreddits we don't want users from
@@ -40,7 +41,11 @@ def log(m):
         logs.close()
 
 if randomRandomFlairs:
-        randomFlairs = bool(random.randint(0,1))
+    willItBeRandom = random.uniform(0,1)
+    if (willItBeRandom <= randomRandomFlairsChance):
+        randomFlairs = False
+    else:
+        randomFlairs = True
 
 recap = ""
 
