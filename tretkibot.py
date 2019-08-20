@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 
+# A Reddit bot that manages a closed subreddit's randomly added approved submitters
+# Originally created by u/Oniixon for use on r/Tretki
+
 import praw, datetime, time, pytz, random, string, obot
 from messages import *
 
-#  --------
-#  Settings
-#  --------
+# --------
+# Settings
+# --------
 
 recapTitle = "Bot Recap" # Text following the current date in the bot post title
 kickedUsersHeading = "Kicked users:" # Text preceding the list of kicked users
